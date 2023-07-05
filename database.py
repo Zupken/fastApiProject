@@ -1,10 +1,17 @@
+import os
 from sqlalchemy import create_engine, Column, String
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from dotenv import load_dotenv
 
-DATABASE_URL = "sqlite:///./test.db"
-#DATABASE_URL = "sqlite:///./phone_book.db"
+load_dotenv()
 
+TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
+PRODUCTION_DATABASE_URL = os.getenv("PRODUCTION_DATABASE_URL")
+print(os.getenv("TESTING"))
+
+DATABASE_URL = TEST_DATABASE_URL if os.getenv("TESTING") else PRODUCTION_DATABASE_URL
+print(DATABASE_URL)
 engine = create_engine(
     DATABASE_URL, connect_args={"check_same_thread": False}
 )

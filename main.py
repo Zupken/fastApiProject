@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Path
 from models import Entry, EntryCreate, EntryOut
-from database import SessionLocal
+from database import SessionLocal, DATABASE_URL
 from typing import List
 
 app = FastAPI()

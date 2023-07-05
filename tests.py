@@ -1,8 +1,14 @@
+import os
+
+os.environ["TESTING"] = "1"
+
 import unittest
 from fastapi.testclient import TestClient
 from main import app
 from models import Entry
 from database import SessionLocal, engine, Base
+
+
 
 class MyTestCase(unittest.TestCase):
 
