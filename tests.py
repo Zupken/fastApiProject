@@ -149,12 +149,11 @@ class TestUpdatingEntry(unittest.TestCase):
         print(response.json())
         self.assertEqual(response.status_code, 200)
 
-    def test_updating_entry_with_legal_changing_number(self):
+    def test_updating_entry_with_legal_changing_number_no_email(self):
         data = {        
             "first_name": "John",
             "last_name": "dsaDoes",
-            "number": "+999999",
-            "email": "johndoe@example.com"
+            "number": "+999999"
         }
         response = self.client.put('/entries/+1234567890', json=data)
         self.assertEqual(response.status_code, 200)
