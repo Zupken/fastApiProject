@@ -1,5 +1,3 @@
-# main.py
-
 from fastapi import FastAPI, HTTPException, Path
 from models import Entry, EntryCreate, EntryOut
 from database import SessionLocal
@@ -7,11 +5,9 @@ from typing import List
 
 app = FastAPI()
 
-
 def get_test_db():
     test_db = SessionLocal()
-    return test_db
-
+    return 
 
 @app.get("/")
 async def root():

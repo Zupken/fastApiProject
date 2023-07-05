@@ -2,11 +2,32 @@ import unittest
 from fastapi.testclient import TestClient
 from main import app
 from models import Entry
+from database import SessionLocal, engine, Base
 
 class MyTestCase(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.client = TestClient(app)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Create a new connection to the database.
+        print('end of tests')
+        with engine.connect() as connection:
+            # Begin a new transaction.
+            with connection.begin() as transaction:
+                # Run a raw SQL query to delete all entries from the table.
+                for table in Base.metadata.tables.values():
+                    connection.execute(table.delete())
+
+
+
     def setUp(self):
-        self.client = TestClient(app)
+        self.db = SessionLocal()
+
+    def tearDown(self):
+        self.db.close()
 
     def test_create_entry_valid(self):
         entry_data = {
@@ -33,5 +54,11 @@ class MyTestCase(unittest.TestCase):
         response = self.client.post("/entry/", json=entry_data)
         self.assertEqual(response.status_code, 422)
 
+def suite():
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(unittest.makeSuite(MyTestCase))
+    return test_suite
+
 if __name__ == '__main__':
-    unittest.main()
+    runner = unittest.TextTestRunner()
+    runner.run(suite())
