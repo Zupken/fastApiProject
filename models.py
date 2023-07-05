@@ -4,12 +4,14 @@ from pydantic import BaseModel, EmailStr, validator, Field
 from typing import Optional
 import re
 
+
 class Entry(Base):
     __tablename__ = "phone_book"
     first_name = Column(String, index=True)
     last_name = Column(String, index=True)
     number = Column(String, primary_key=True, index=True, unique=True)
     email = Column(String, index=True)
+
 
 class EntryCreate(BaseModel):
     first_name: str
@@ -57,9 +59,9 @@ class EntryUpdate(BaseModel):
             return cleaned_number
 
 
-
 class EntryOut(BaseModel):
     first_name: str
     last_name: str
     number: str
     email: EmailStr
+

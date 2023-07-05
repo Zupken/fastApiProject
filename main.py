@@ -1,11 +1,11 @@
-from fastapi import FastAPI, HTTPException, Path
+from fastapi import FastAPI, HTTPException
 from models import Entry, EntryCreate, EntryOut, EntryUpdate
-from database import SessionLocal, DATABASE_URL
+from database import SessionLocal
 from typing import List, Optional
 from sqlalchemy import func
 
-app = FastAPI()
 
+app = FastAPI()
 
 @app.get("/entries", response_model=List[EntryOut])
 async def search_entries(
@@ -49,7 +49,7 @@ async def create_entry(entry: EntryCreate):
     return EntryOut(**db_entry.__dict__)
 
 @app.delete("/entries/{number}")
-async def delete_entry(number: str = Path(..., description="The phone number of the entry to delete")):
+async def delete_entry(number: str):
     db = SessionLocal()
     entry = db.query(Entry).filter(Entry.number == number).first()
     if not entry:
