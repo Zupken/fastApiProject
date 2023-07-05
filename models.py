@@ -5,7 +5,6 @@ import re
 
 class Entry(Base):
     __tablename__ = "phone_book"
-
     first_name = Column(String, index=True)
     last_name = Column(String, index=True)
     number = Column(String, primary_key=True, index=True, unique=True)
@@ -20,7 +19,7 @@ class EntryCreate(BaseModel):
     @validator('number')
     def validate_number(cls, number):
         cleaned_number = number.replace(' ', '')
-         # E.164 international standard - phone number up to 15 digits
+        # E.164 international standard - phone number up to 15 digits
         # min length - +country_code number - so min length is 2 digits
         if not re.match(r'^\+[1-9]{1}[0-9]{1,14}$', cleaned_number):
             if not cleaned_number.startswith('+') and cleaned_number[0].isdigit():
