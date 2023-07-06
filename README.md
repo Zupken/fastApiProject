@@ -21,12 +21,14 @@ Główna część projektu rozbita jest na trzy pliki:
 Projekt był uruchamiany na Ubuntu 22.04 w Pythonie 3.10.6. Instalacja i uruchomienie projektu:
 
 ```bash
+apt install git
 apt install uvicorn
 git clone https://github.com/Zupken/fastApiProject
 cd fastApiProject
 pip install -r requirements.txt
 uvicorn main:app --reload
-``` 
+```
+Uwaga - nie klonować i nie instalować modułów jako root, później są problemy z uprawnieniami bazy danych.
 Serwer zostanie uruchomiony na localhost:8000.
 
 
