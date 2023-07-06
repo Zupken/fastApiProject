@@ -7,13 +7,22 @@ from sqlalchemy import func
 
 app = FastAPI()
 
+@app.post("/entries")
+async def create_entry(entry: EntryCreate):
+    db = SessionLocal()
+    db_entry = Entry(**entry.dict())
+    db.add(db_entry)
+    db.commit()
+    db.refresh(db_entry)
+    return EntryOut(**db_entry.__dict__)
+
 @app.get("/entries", response_model=List[EntryOut])
 async def search_entries(
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
     number: Optional[str] = None,
     email: Optional[str] = None,
-):
+    ):
     db = SessionLocal()
     query = db.query(Entry)
 
@@ -28,35 +37,17 @@ async def search_entries(
         #if number.startswith('+') is False:
         #    number = '+'+number.strip()
         if number.startswith('+') is False:
-            return HTTPException(status_code=400, detail='No plus sign in number. Remember that to pass plus sign as url parameter you should use %2B not plus sign.')
+            return HTTPException(status_code=400, detail='''No plus sign in number. 
+            Remember that to pass plus sign as url parameter 
+            you should use %2B not plus sign.''')
         query = query.filter(Entry.number == number)
     if email:
         query = query.filter(func.lower(Entry.email) == func.lower(email))
-        
-    entries = query.all()
 
+    entries = query.all()
     if not entries:
         raise HTTPException(status_code=404, detail="No entries found")
     return [EntryOut(**entry.__dict__) for entry in entries]
-
-@app.post("/entries")
-async def create_entry(entry: EntryCreate):
-    db = SessionLocal()
-    db_entry = Entry(**entry.dict())
-    db.add(db_entry)
-    db.commit()
-    db.refresh(db_entry)
-    return EntryOut(**db_entry.__dict__)
-
-@app.delete("/entries/{number}")
-async def delete_entry(number: str):
-    db = SessionLocal()
-    entry = db.query(Entry).filter(Entry.number == number).first()
-    if not entry:
-        raise HTTPException(status_code=404, detail="Entry not found")
-    db.delete(entry)
-    db.commit()
-    return {"message": f"Entry with phone number {number} has been deleted."}
 
 @app.put("/entries/{number}")
 async def update_entry(number: str, entry: EntryUpdate):
@@ -74,3 +65,13 @@ async def update_entry(number: str, entry: EntryUpdate):
     db.commit()
     db.refresh(db_entry)
     return {"message": f"Entry with phone number {number} has been updated."}
+
+@app.delete("/entries/{number}")
+async def delete_entry(number: str):
+    db = SessionLocal()
+    entry = db.query(Entry).filter(Entry.number == number).first()
+    if not entry:
+        raise HTTPException(status_code=404, detail="Entry not found")
+    db.delete(entry)
+    db.commit()
+    return {"message": f"Entry with phone number {number} has been deleted."}

@@ -20,7 +20,7 @@ class EntryCreate(BaseModel):
     email: EmailStr
 
     @validator('number')
-    def validate_number(cls, number):
+    def validate_number(number):
         cleaned_number = number.replace(' ', '')
         # E.164 international standard - phone number up to 15 digits
         # min length - +country_code number - so min length is 2 digits
@@ -46,7 +46,7 @@ class EntryUpdate(BaseModel):
     email: Optional[EmailStr] = Field(None)
 
     @validator('number', pre=True, always=True)
-    def validate_number(cls, number):
+    def validate_number(number):
         if number is not None:
             cleaned_number = number.replace(' ', '')
             if not re.match(r'^\+[1-9]{1}[0-9]{1,14}$', cleaned_number):

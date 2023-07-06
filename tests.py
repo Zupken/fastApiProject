@@ -146,7 +146,6 @@ class TestUpdatingEntry(unittest.TestCase):
             "email": "johndoe@example.com"
         }
         response = self.client.put('/entries/+12', json=data)
-        print(response.json())
         self.assertEqual(response.status_code, 200)
 
     def test_updating_entry_with_legal_changing_number_no_email(self):
@@ -159,6 +158,8 @@ class TestUpdatingEntry(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
     
     def test_updating_entry_with_illegal_changing_number(self):
+        #we are trying to change number +12345 to number that exists in database
+        #that operation is not allowed - we should get 422 code
         data = {        
             "first_name": "John",
             "last_name": "dsaDoes",
@@ -176,15 +177,18 @@ class TestDeletingEntry(unittest.TestCase):
     
     @classmethod
     def tearDownClass(cls):
+        #delete all records in database after all tests in that class
         with engine.connect() as connection:
             with connection.begin() as transaction:
                 for table in Base.metadata.tables.values():
                     connection.execute(table.delete())
 
     def test_deleting_entry(self):
+        response = self.client.get('/entries')
+        number_of_entries = len(response.json())
         self.client.delete('/entries/+999999')
         response = self.client.get('/entries')
-        self.assertEqual(len(response.json()), 3)
+        self.assertEqual(len(response.json()), number_of_entries-1)
 
 
 def suite():
