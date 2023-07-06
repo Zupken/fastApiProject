@@ -1,6 +1,7 @@
 # Książka telefoniczna
 
-Projekt wykonany przy pomocy FastAPI. Główne założenia:
+Projekt wykonany przy pomocy FastAPI. Dokumentacja znajduje się pod adresem http://localhost:8000/redoc
+Główne założenia:
 
 -   Aplikacja obsługuje operacje CRUD.
 -   Walidacja wprowadzanych danych - sprawdzanie poprawności maila oraz numeru telefonu.
@@ -10,7 +11,7 @@ Projekt wykonany przy pomocy FastAPI. Główne założenia:
 
 Główna część projektu rozbita jest na trzy pliki:
 
--   main.py - gdzie znajdują się wszystkie endpointy.
+-   main.py - gdzie znajdują się wszystkie endpointy
 -   models.py - definicje klas służących do interakcji z bazą danych. Klasa **Entry** to klasa dziedzicząca po klasie Base z SQLAlchemy. Reszta klas dziedziczy po BaseModel z Pydantic.
 -   database.py - plik odpowiada za konfigurację i połączenie z bazą danych. W zależności od zmiennej środowiskowej TESTING używana jest baza phone_book lub test.
 
