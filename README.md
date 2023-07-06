@@ -1,6 +1,7 @@
 # Książka telefoniczna
 
 Projekt wykonany przy pomocy FastAPI. Dokumentacja znajduje się pod adresem http://localhost:8000/redoc
+
 Główne założenia:
 
 -   Aplikacja obsługuje operacje CRUD.
